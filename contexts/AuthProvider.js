@@ -3,6 +3,7 @@
  */
 import React from 'react';
 import Auth from '../api/auth';
+import cookie from 'js-cookie';
 import authReducer from '../reducers/auth';
 import { LOGIN_ACTION, LOGOUT_ACTION } from '../constants/actions';
 import API from '../api';
@@ -70,9 +71,9 @@ const AuthProvider = props => {
 
   React.useEffect( () => {
     const checkAuthentication = () => {
-      const auth = Auth.checkAuthentication();
-      console.log( 'isAuth', auth );
-      dispatchAuthAction( auth );
+      const token = cookie.get( 'token' ); // check if the token exists
+      console.log( 'isAuth', token );
+      dispatchAuthAction( token );
     };
 
     checkAuthentication();

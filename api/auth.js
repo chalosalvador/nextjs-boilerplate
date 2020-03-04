@@ -14,25 +14,15 @@ import { translateMessage } from '../helpers/translateMessage';
  * @param ctx
  * @returns {string}
  */
-const checkAuthentication = ( ctx = null ) => {
-  let token;
-  if( ctx ) {
-    token = nextCookie( ctx ).token;
+const checkAuthentication = ( ctx ) => {
+  const { token } = nextCookie( ctx );
 
-    // If there's no token, it means the user is not logged in.
-    if( !token ) {
-      if( typeof window === 'undefined' ) { // on the server
-        ctx.res.writeHead( 302, { Location: Routes.LOGIN } );
-        ctx.res.end();
-      } else { // on the client
-        Router.push( Routes.LOGIN );
-      }
-    }
-  } else { // on the client
-    token = cookie.get( 'token' );
-
-    // If there's no token, it means the user is not logged in.
-    if( !token ) {
+  // If there's no token, it means the user is not logged in.
+  if( !token ) {
+    if( typeof window === 'undefined' ) { // on the server
+      ctx.res.writeHead( 302, { Location: Routes.LOGIN } );
+      ctx.res.end();
+    } else { // on the client
       Router.push( Routes.LOGIN );
     }
   }
