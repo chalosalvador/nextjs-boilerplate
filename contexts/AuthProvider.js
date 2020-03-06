@@ -15,7 +15,7 @@ const AuthProvider = props => {
 
   /**
    * AuthAction
-   * @param auth
+   * @param token
    */
   const dispatchAuthAction = ( token ) => {
     if( token ) {
