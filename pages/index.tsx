@@ -9,14 +9,19 @@ interface Props {
 
 const HomePage: NextPage<Props> = ( props: Props ) => (
   <>
-    <h1 className='title'>
-      Welcome to <a href='https://nextjs.org'>Next.js!</a>
+    <h1 className='page-title'>
+      <a href='https://nextjs.org'>Next.js!</a> boilerplate with <a href='https://ant.design/docs/react/introduce'>Antd</a>
     </h1>
 
-    <p className='description'>
-      Get started by editing <code>pages/index.js</code>
+    <p>
+      Este es el contenido de la página principal.
     </p>
 
+    <p>
+      Empieza editando el código de <code>pages/index.js</code>
+    </p>
+
+    <h2>Lista de Artículos</h2>
     <ArticleList articles={ props.articles } />
   </>
 );

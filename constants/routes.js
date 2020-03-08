@@ -6,7 +6,8 @@ const publicRoutes = {
   LOGIN: '/ingreso',
   ARTICLES: '/article/list',
   HOME: '/',
-  ABOUT: '/acerca-de'
+  ABOUT: '/acerca-de',
+  ANTD: '/antd'
 };
 
 const privateRoutes = {
