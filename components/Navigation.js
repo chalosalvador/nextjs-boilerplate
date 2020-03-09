@@ -3,10 +3,10 @@
  */
 import React, { useState } from 'react';
 import Link from 'next/link';
-// import {Link} from "react-router-dom";
 import Routes from '../constants/routes';
-import { useAuth, useDispatchAuth } from '../contexts/AuthProvider';
-import { Menu } from 'antd';
+import { useAuth } from '../contexts/AuthProvider';
+import { Button, Menu } from 'antd';
+import { LogoutOutlined, LoginOutlined } from '@ant-design/icons';
 
 const linkStyle = {};
 
@@ -18,19 +18,6 @@ const Navigation = ( props ) => {
     openKeys: []
   } );
   const auth = useAuth();
-
-  // const onOpenChange = ( openKeys ) => {
-  //   const latestOpenKey = openKeys.find( key => this.state.openKeys.indexOf( key ) === -1 );
-  //   if( this.rootSubmenuKeys.indexOf( latestOpenKey ) === -1 ) {
-  //     this.setState( { openKeys } );
-  //   } else {
-  //     this.setState( {
-  //       openKeys: latestOpenKey
-  //         ? [ latestOpenKey ]
-  //         : []
-  //     } );
-  //   }
-  // };
 
   const handleClick = ( e ) => {
     console.log( 'click ', e );
@@ -72,23 +59,23 @@ const Navigation = ( props ) => {
         </Link>
       </Menu.Item>
 
-      {
-        auth.token
-          ? <Menu.Item key='login'>
-            <button onClick={ auth.handleLogout }>logout</button>
-          </Menu.Item>
-          : <Menu.Item key='login'>
-            <Link href={ Routes.LOGIN }>
-              <a style={ linkStyle }>Login</a>
-            </Link>
-          </Menu.Item>
-      }
-
       <Menu.Item key='about'>
         <Link href={ Routes.ABOUT }>
           <a style={ linkStyle }>About</a>
         </Link>
       </Menu.Item>
+
+      {
+        auth.token
+          ? <Menu.Item key='login'>
+            <Button type='link' danger icon={<LogoutOutlined />} onClick={ auth.handleLogout }>Salir</Button>
+          </Menu.Item>
+          : <Menu.Item key='login'>
+            <Link href={ Routes.LOGIN }>
+              <a style={ linkStyle }><LoginOutlined /> Ingresar</a>
+            </Link>
+          </Menu.Item>
+      }
     </Menu>
   );
 };

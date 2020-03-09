@@ -2,8 +2,9 @@
  * Created by chalosalvador on 3/1/20
  */
 
-import Auth from "./auth";
 import fetch from 'isomorphic-unfetch';
+import Router from 'next/router';
+import Routes from '../constants/routes';
 
 const baseURL = 'http://localhost:8000/api'; // todo move to .env
 const headers = {
@@ -11,59 +12,58 @@ const headers = {
   'Content-Type': 'application/json',
 };
 
-const handleRequest = async (endpoint, method, params = null) => {
+const handleRequest = async( endpoint, method, params = null ) => {
 
-
-  // const authData = Auth.checkAuthentication();
-  // if (authData) {
-  //   headers['Authorization'] = `Bearer ${authData.token}`;
-  // }
   const requestData = {
     method,
     headers
   };
 
-  if (params !== null) {
-    requestData['body'] = JSON.stringify(params);
+  if( params !== null ) {
+    requestData[ 'body' ] = JSON.stringify( params );
   }
 
-  const response = await fetch(`${baseURL}${endpoint}`, requestData);
+  const response = await fetch( `${ baseURL }${ endpoint }`, requestData );
 
   // console.log('response', response);
   const jsonResponse = await response.json();
   // console.log('jsonResponse', jsonResponse);
 
-  if (!response.ok) {
+  if( !response.ok ) {
     // throw new Error(jsonResponse.error);
-    const error = new Error(jsonResponse.error);
+    console.log( 'response', response );
+    if( response.status === 401 ) {
+      Router.push( Routes.LOGIN );
+    }
+    const error = new Error( jsonResponse.error );
     error.response = response;
-    return Promise.reject(error);
+    return Promise.reject( error );
   }
 
   return jsonResponse;
 };
 
-const post = (endpoint, params = null) => {
-  return handleRequest(endpoint, 'POST', params);
+const post = ( endpoint, params = null ) => {
+  return handleRequest( endpoint, 'POST', params );
 };
 
-const put = (endpoint, params = null) => {
-  return handleRequest(endpoint, 'PUT', params);
+const put = ( endpoint, params = null ) => {
+  return handleRequest( endpoint, 'PUT', params );
 };
 
-const patch = (endpoint, params = null) => {
-  return handleRequest(endpoint, 'PATCH', params);
+const patch = ( endpoint, params = null ) => {
+  return handleRequest( endpoint, 'PATCH', params );
 };
 
-const get = (endpoint) => {
-  return handleRequest(endpoint, 'GET');
+const get = ( endpoint ) => {
+  return handleRequest( endpoint, 'GET' );
 };
 
-const deleteMethod = (endpoint) => {
-  return handleRequest(endpoint, 'DELETE');
+const deleteMethod = ( endpoint ) => {
+  return handleRequest( endpoint, 'DELETE' );
 };
 
-const create = (config) => {
+const create = ( config ) => {
   return {
     post,
     put,

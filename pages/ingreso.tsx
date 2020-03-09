@@ -1,104 +1,102 @@
-// import React from 'react';
-// import {UserContext} from "../contexts/UserContextProvider";
-// import { NextPage } from 'next';
-// import Layout from '../components/Layout';
-// import LoginButton from '../components/LoginButton';
-//
-//
-// const LoginPage : NextPage = () => {
-//   return (
-//     <Layout>
-//       <LoginButton/>
-//     </Layout>
-//   );
-// };
-//
-// export default LoginPage;
-
-import React, { useState } from 'react';
+import React  from 'react';
 import { useAuth } from '../contexts/AuthProvider';
 import { useRouter } from 'next/router';
 import Routes from '../constants/routes';
+import { Button, Checkbox, Col, Form, Input, Row } from 'antd';
+import { LockOutlined, UserOutlined } from '@ant-design/icons/lib';
 
 const Login = () => {
-  const [ userData, setUserData ] = useState( {
-    username: 'admin@test.com',
-    password: 'toptal',
-    error: ''
-  } );
   const auth = useAuth();
   const router = useRouter();
 
-  const handleSubmit = async( event: any ) => {
-    event.preventDefault();
-    setUserData( {
-      ...userData,
-      error: ''
-    } );
+  React.useEffect( () => {
+    const checkAuthentication = () => {
+      console.log( 'auth.token', auth );
+      if( auth.token ) {
+        router.push( Routes.HOME );
+      }
+    };
 
-    const username = userData.username; //'admin@test.com'
-    const password = userData.password; //'toptal'
+    checkAuthentication();
+  }, [ auth ] );
+
+  const onFinish = async( userData: any ) => {
+    console.log( 'Received values of form: ', userData );
 
     try {
-      await auth.handleLogin( username, password );
+      await auth.handleLogin( userData.username, userData.password );
     } catch( error ) {
       console.error(
         'You have an error in your code or there are Network issues.',
         error
       );
-
-      const { response } = error;
-      setUserData( {
-        ...userData,
-        error: response
-          ? response.statusText
-          : error.message
-      } );
     }
   };
 
-  console.log( 'auth.token', auth.token );
-  if( auth.token ) {
-    router.push( Routes.HOME );
-  }
-
   return (
     <>
-      <div className='login'>
-        <form onSubmit={ handleSubmit }>
-          <label htmlFor='username'>Email</label>
-          <input
-            type='text'
-            id='username'
-            name='username'
-            value={ userData.username }
-            onChange={ event =>
-              setUserData(
-                Object.assign( {}, userData, { username: event.target.value } )
-              )
-            }
-          />
+      <Row justify='center' className='login'>
+        <Col span={ 8 }>
+          <Form
+            name='login-form'
+            className='login-form'
+            initialValues={ {
+              remember: true,
+              username: 'admin@test.com',
+              password: 'toptal'
+            } }
+            onFinish={ onFinish }
+          >
+            <Form.Item
+              name='username'
+              rules={ [
+                {
+                  required: true,
+                  message: 'Ingresa tu nombre de usuario'
+                },
+                {
+                  type: 'email',
+                  message: 'Ingresa un correo válido'
+                }
+              ] }
+            >
+              <Input prefix={ <UserOutlined className='site-form-item-icon' /> } placeholder='Email' />
+            </Form.Item>
 
-          <label htmlFor='password'>Clave</label>
-          <input
-            type='password'
-            id='password'
-            name='password'
-            value={ userData.password }
-            onChange={ event =>
-              setUserData( {
-                ...userData,
-                password: event.target.value
-              } )
-            }
-          />
+            <Form.Item
+              name='password'
+              rules={ [
+                {
+                  required: true,
+                  message: 'Ingresa tu clave'
+                }
+              ] }
+            >
+              <Input
+                prefix={ <LockOutlined className='site-form-item-icon' /> }
+                type='password'
+                placeholder='Password'
+              />
+            </Form.Item>
 
-          <button type='submit'>Login</button>
+            <Form.Item name='remember' valuePropName='checked' noStyle>
+              <Checkbox>Recordarme</Checkbox>
+            </Form.Item>
 
-          { userData.error && <p className='error'>Error: { userData.error }</p> }
-        </form>
-      </div>
-      <style jsx>{ `
+            <Form.Item>
+              <a className='login-form-forgot' href=''>
+                ¡Olvidé mi clave!
+              </a>
+            </Form.Item>
+
+            <Form.Item>
+              <Button type='primary' htmlType='submit' className='login-form-button'>
+                Ingresar
+              </Button>
+              <div>Or <a href=''>register now!</a></div>
+            </Form.Item>
+          </Form>
+          <style jsx>{ `
         .login {
           max-width: 340px;
           margin: 0 auto;
@@ -106,24 +104,9 @@ const Login = () => {
           border: 1px solid #ccc;
           border-radius: 4px;
         }
-        form {
-          display: flex;
-          flex-flow: column;
-        }
-        label {
-          font-weight: 600;
-        }
-        input {
-          padding: 8px;
-          margin: 0.3rem 0 1rem;
-          border: 1px solid #ccc;
-          border-radius: 4px;
-        }
-        .error {
-          margin: 0.5rem 0 0;
-          color: brown;
-        }
       ` }</style>
+        </Col>
+      </Row>
     </>
   );
 };
