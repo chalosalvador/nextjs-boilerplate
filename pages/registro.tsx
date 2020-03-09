@@ -1,12 +1,13 @@
-import React  from 'react';
+import React from 'react';
 import { useAuth } from '../contexts/AuthProvider';
 import { useRouter } from 'next/router';
 import Routes from '../constants/routes';
-import { Button, Checkbox, Col, Form, Input, Row } from 'antd';
+import { Button, Checkbox, Col, Form, Input, message, Row } from 'antd';
 import { LockOutlined, UserOutlined } from '@ant-design/icons/lib';
 import Link from 'next/link';
+import API from '../api';
 
-const Login = () => {
+const Register = () => {
   const auth = useAuth();
   const router = useRouter();
 
@@ -23,14 +24,23 @@ const Login = () => {
 
   const onFinish = async( userData: any ) => {
     console.log( 'Received values of form: ', userData );
+    const { name, email, password, password_confirmation } = userData;
 
     try {
-      await auth.handleLogin( userData.username, userData.password );
+      await API.post( '/register', {
+        name,
+        email,
+        password,
+        password_confirmation
+      } );
     } catch( error ) {
       console.error(
         'You have an error in your code or there are Network issues.',
         error
       );
+
+      // todo show message
+      message.error(error.message)
     }
   };
 
@@ -39,17 +49,29 @@ const Login = () => {
       <Row justify='center' className='login'>
         <Col span={ 8 }>
           <Form
-            name='login-form'
-            className='login-form'
+            name='register-form'
+            className='register-form'
             initialValues={ {
-              remember: true,
-              username: '',
+              email: '',
               password: ''
             } }
             onFinish={ onFinish }
           >
             <Form.Item
-              name='username'
+              name='name'
+              rules={ [
+                {
+                  required: true,
+                  message: 'Ingresa tu nombre'
+                }
+              ] }
+              hasFeedback
+            >
+              <Input prefix={ <UserOutlined className='site-form-item-icon' /> } placeholder='Nombre' />
+            </Form.Item>
+
+            <Form.Item
+              name='email'
               rules={ [
                 {
                   required: true,
@@ -60,6 +82,7 @@ const Login = () => {
                   message: 'Ingresa un correo válido'
                 }
               ] }
+              hasFeedback
             >
               <Input prefix={ <UserOutlined className='site-form-item-icon' /> } placeholder='Email' />
             </Form.Item>
@@ -72,29 +95,38 @@ const Login = () => {
                   message: 'Ingresa tu clave'
                 }
               ] }
+              hasFeedback
             >
-              <Input
-                prefix={ <LockOutlined className='site-form-item-icon' /> }
-                type='password'
-                placeholder='Password'
-              />
+              <Input.Password prefix={ <LockOutlined className='site-form-item-icon' /> } placeholder='Clave' />
             </Form.Item>
 
-            <Form.Item name='remember' valuePropName='checked' noStyle>
-              <Checkbox>Recordarme</Checkbox>
-            </Form.Item>
-
-            <Form.Item>
-              <a className='login-form-forgot' href=''>
-                ¡Olvidé mi clave!
-              </a>
+            <Form.Item
+              name="password_confirmation"
+              dependencies={['password']}
+              hasFeedback
+              rules={[
+                {
+                  required: true,
+                  message: 'Confirma tu clave',
+                },
+                ({ getFieldValue }) => ({
+                  validator(rule, value) {
+                    if (!value || getFieldValue('password') === value) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject('Las claves no coinciden');
+                  },
+                }),
+              ]}
+            >
+              <Input.Password prefix={ <LockOutlined className='site-form-item-icon' /> } placeholder="Confirma tu clave" />
             </Form.Item>
 
             <Form.Item>
               <Button type='primary' htmlType='submit' className='login-form-button'>
-                Ingresar
+                Registrarme
               </Button>
-              <div>Soy nuevo, <Link href={Routes.REGISTER}><a>registrarme</a></Link></div>
+              <div><Link href={ Routes.LOGIN }><a>Ya tengo una cuenta</a></Link></div>
             </Form.Item>
           </Form>
           <style jsx>{ `
@@ -112,4 +144,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;
