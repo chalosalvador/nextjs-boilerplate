@@ -1,7 +1,6 @@
-import ArticleList from '../components/ArticleList';
-import Layout from '../components/Layout';
 import { NextPage } from 'next';
 import API from '../api';
+import ArticleList from '../components/ArticleList';
 
 interface Props {
   articles: []
@@ -16,7 +15,7 @@ const HomePage: NextPage<Props> = ( props: Props ) => (
     <p>
       Este es el contenido de la página principal.
     </p>
-    
+
     <p>
       Empieza editando el código de <code>pages/index.js</code>
     </p>

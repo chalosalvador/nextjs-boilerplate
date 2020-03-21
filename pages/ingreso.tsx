@@ -1,10 +1,10 @@
 import React  from 'react';
-import { useAuth } from '../contexts/AuthProvider';
 import { useRouter } from 'next/router';
-import Routes from '../constants/routes';
-import { Button, Checkbox, Col, Form, Input, Row } from 'antd';
-import { LockOutlined, UserOutlined } from '@ant-design/icons/lib';
 import Link from 'next/link';
+import Routes from '../constants/routes';
+import { useAuth } from '../contexts/AuthProvider';
+import { Checkbox, Col, Form, Input, Row, Button } from 'antd';
+import { LockOutlined, UserOutlined } from '@ant-design/icons/lib';
 
 const Login = () => {
   const auth = useAuth();

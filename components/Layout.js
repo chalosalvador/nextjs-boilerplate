@@ -2,11 +2,11 @@
  * Created by chalosalvador on 3/1/20
  */
 import Head from 'next/head';
-import { Button, Col, Divider, Layout, Popover, Row } from 'antd';
-import Navigation from './Navigation';
-import logo from '../public/images/logo-menta.png';
-import { FacebookOutlined, InstagramOutlined } from '@ant-design/icons';
 import Routes from '../constants/routes';
+import Navigation from './Navigation';
+import { Layout, Row, Col, Button, Popover } from 'antd';
+import { FacebookOutlined, InstagramOutlined } from '@ant-design/icons';
+import logo from '../public/images/logo-menta.png';
 
 const Header = Layout.Header;
 const Content = Layout.Content;
@@ -19,6 +19,8 @@ const MainLayout = props => {
       <Layout>
         <Head>
           <title>Create Next App</title>
+          {/* Import CSS for nprogress */}
+          <link rel="stylesheet" type="text/css" href="/css/nprogress.css" />
           <link rel='icon' href='/favicon.ico' />
         </Head>
 

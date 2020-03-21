@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import Routes from '../constants/routes';
 import { useAuth } from '../contexts/AuthProvider';
-import { Button, Menu } from 'antd';
+import { Menu, Button } from 'antd';
 import { LogoutOutlined, LoginOutlined } from '@ant-design/icons';
 
 const linkStyle = {};
@@ -68,7 +68,7 @@ const Navigation = ( props ) => {
       {
         auth.token
           ? <Menu.Item key='login'>
-            <Button type='link' danger icon={<LogoutOutlined />} onClick={ auth.handleLogout }>Salir</Button>
+            <Button type='link' danger icon={ <LogoutOutlined /> } onClick={ auth.handleLogout }>Salir</Button>
           </Menu.Item>
           : <Menu.Item key='login'>
             <Link href={ Routes.LOGIN }>
