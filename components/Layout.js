@@ -1,186 +1,158 @@
 /**
  * Created by chalosalvador on 3/1/20
  */
-import Header from './Header';
 import Head from 'next/head';
-import { useAuth, useDispatchAuth } from '../contexts/AuthProvider';
+import { Button, Col, Divider, Layout, Popover, Row } from 'antd';
+import Navigation from './Navigation';
+import logo from '../public/images/logo-menta.png';
+import { FacebookOutlined, InstagramOutlined } from '@ant-design/icons';
+import Routes from '../constants/routes';
 
-const layoutStyle = {
-  margin: 20,
-  padding: 20,
-  border: '1px solid #DDD'
-};
+const Header = Layout.Header;
+const Content = Layout.Content;
+const Footer = Layout.Footer;
 
-const Layout = props => {
+const MainLayout = props => {
+
   return (
-    <div className='container'>
-      <Head>
-        <title>Create Next App</title>
-        <link rel='icon' href='/favicon.ico' />
-      </Head>
+    <div className='app'>
+      <Layout>
+        <Head>
+          <title>Create Next App</title>
+          <link rel='icon' href='/favicon.ico' />
+        </Head>
 
-      <main>
-        <div style={ layoutStyle }>
-          <Header />
-          { props.children }
-        </div>
-      </main>
+        <Row type='flex' justify='center' className='header-wrapper'>
+          <Col span={ 20 }>
+            <Header className='header'>
+              <Row type='flex' justify='space-between' align='bottom'>
+                <Col xs={ 24 } md={ 6 } className='logo-wrapper'>
+                  <a href={ process.env.REACT_APP_DOMAIN }><img className='logo'
+                                                                src={ logo }
+                                                                alt='Grupo Menta' /></a>
+                </Col>
 
-      <footer>
-        <a
-          href='https://zeit.co?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app'
-          target='_blank'
-          rel='noopener noreferrer'
-        >
-          Powered by <img src='/zeit.svg' alt='ZEIT Logo' />
-        </a>
-      </footer>
+                <Col md={ 14 } align='right' className='main-menu'>
+                  <Navigation mode='horizontal' />
+                </Col>
 
-      <style jsx>{ `
-      .container {
-      min-height: 100vh;
-      padding: 0 0.5rem;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      }
-      
-      main {
-      padding: 5rem 0;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      }
-      
-      footer {
-      width: 100%;
-      height: 100px;
-      border-top: 1px solid #eaeaea;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      }
-      
-      footer img {
-      margin-left: 0.5rem;
-      }
-      
-      footer a {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      }
-      
-      a {
-      color: inherit;
-      text-decoration: none;
-      }
-      
-      .title a {
-      color: #0070f3;
-      text-decoration: none;
-      }
-      
-      .title a:hover,
-      .title a:focus,
-      .title a:active {
-      text-decoration: underline;
-      }
-      
-      .title {
-      margin: 0;
-      line-height: 1.15;
-      font-size: 4rem;
-      }
-      
-      .title,
-      .description {
-      text-align: center;
-      }
-      
-      .description {
-      line-height: 1.5;
-      font-size: 1.5rem;
-      }
-      
-      code {
-      background: #fafafa;
-      border-radius: 5px;
-      padding: 0.75rem;
-      font-size: 1.1rem;
-      font-family: Menlo, Monaco, Lucida Console, Liberation Mono,
-      DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace;
-      }
-      
-      .grid {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-wrap: wrap;
-      
-      max-width: 800px;
-      margin-top: 3rem;
-      }
-      
-      .card {
-      margin: 1rem;
-      flex-basis: 45%;
-      padding: 1.5rem;
-      text-align: left;
-      color: inherit;
-      text-decoration: none;
-      border: 1px solid #eaeaea;
-      border-radius: 10px;
-      transition: color 0.15s ease, border-color 0.15s ease;
-      }
-      
-      .card:hover,
-      .card:focus,
-      .card:active {
-      color: #0070f3;
-      border-color: #0070f3;
-      }
-      
-      .card h3 {
-      margin: 0 0 1rem 0;
-      font-size: 1.5rem;
-      }
-      
-      .card p {
-      margin: 0;
-      font-size: 1.25rem;
-      line-height: 1.5;
-      }
-      
-      @media (max-width: 600px) {
-      .grid {
-      width: 100%;
-      flex-direction: column;
-      }
-      }
-      ` }</style>
+                <Col xs={ 2 } align='right' className='responsive-menu-button'>
+                  <Popover content={ <Navigation mode='vertical' /> } trigger='click' placement='rightTop' overlayClassName='responsive-menu-wrapper'>
+                    <Button type='primary'>
+                      <svg viewBox='64 64 896 896'
+                           focusable='false'
+                           className=''
+                           data-icon='menu'
+                           width='1em'
+                           height='1em'
+                           fill='currentColor'
+                           aria-hidden='true'>
+                        <path d='M904 160H120c-4.4 0-8 3.6-8 8v64c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-64c0-4.4-3.6-8-8-8zm0 624H120c-4.4 0-8 3.6-8 8v64c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-64c0-4.4-3.6-8-8-8zm0-312H120c-4.4 0-8 3.6-8 8v64c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-64c0-4.4-3.6-8-8-8z'></path>
+                      </svg>
+                    </Button>
+                  </Popover>
+                </Col>
 
-      <style jsx global>{ `
-      html,
-      body {
-      padding: 0;
-      margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-      Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-      }
-      
-      * {
-      box-sizing: border-box;
-      }
-      ` }
-      </style>
+                <Col xs={ 22 } md={ 4 } className='logos-social-header' align='right'>
+                  <a href='https://www.facebook.com'
+                     target='_blank'
+                     rel='noopener noreferrer'
+                     style={ {
+                       marginLeft: 30,
+                       marginRight: 30
+                     } }>
+                    <FacebookOutlined />
+                  </a>
+
+                  <a href='https://www.instagram.com' target='_blank' rel='noopener noreferrer'>
+                    <InstagramOutlined />
+                  </a>
+                </Col>
+              </Row>
+            </Header>
+          </Col>
+        </Row>
+
+
+        <Content className='content'>
+          <Row type='flex' justify='center'>
+            <Col xs={ 22 } md={ 20 }>
+              { props.children }
+            </Col>
+          </Row>
+        </Content>
+
+        <Footer className='footer'>
+          <Row>
+            <Col xs={ { span: 24 } } md={ 8 } className='logo-blanco'>
+              LOGO
+            </Col>
+
+            <Col xs={ {
+              span: 24,
+              offset: 0
+            } }
+                 md={ {
+                   span: 5,
+                   offset: 3
+                 } }
+                 className='logo-menta'>
+              Elaborado por: <br />
+              <a href='https://grupomenta.com'
+                 rel='noopener noreferrer'
+                 target='_blank'><img src='/images/logo-menta.png'
+                                      alt='Profe a Tiempo'
+                                      height={ 50 } /></a>
+            </Col>
+
+            <Col xs={ {
+              span: 24,
+              offset: 0
+            } }
+                 md={ {
+                   span: 4,
+                   offset: 4
+                 } }
+                 className='contact-links'>
+              <p><strong>Contáctanos</strong></p>
+              <p><a href='mailto:chalo.salvador@grupomenta.com'>chalo.salvador@grupomenta.com</a></p>
+              <p><a href='https://wa.me/593984794808' target='_blank' rel='noopener noreferrer'>+593 9-8479-4808</a></p>
+            </Col>
+          </Row>
+
+          <Row type='flex' justify='space-between' align='bottom'>
+            <Col xs={ 24 } md={ 8 }>
+              &copy; 2019. Todos los derechos reservados
+            </Col>
+
+            <Col xs={ 24 } md={ 4 } className='footer-links'>
+              <a href={ Routes.ABOUT } style={ { marginRight: 20 } }>Preguntas frecuentes</a>
+            </Col>
+            <Col xs={ 24 } md={ 4 } className='footer-links'>
+              <a href={ Routes.ABOUT }>Términos y condiciones</a>
+            </Col>
+
+            <Col xs={ 24 } md={ 8 } className='logos-social'>
+              <strong>Síguenos en:</strong>
+              <a href='https://www.facebook.com'
+                 target='_blank'
+                 rel='noopener noreferrer'
+                 style={ {
+                   marginLeft: 30,
+                   marginRight: 30
+                 } }>
+                <FacebookOutlined />
+              </a>
+
+              <a href='https://www.instagram.com' target='_blank' rel='noopener noreferrer'>
+                <InstagramOutlined />
+              </a>
+            </Col>
+          </Row>
+        </Footer>
+      </Layout>
     </div>
-
-
   );
 };
 
-export default Layout;
+export default MainLayout;

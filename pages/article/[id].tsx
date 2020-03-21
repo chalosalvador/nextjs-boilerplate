@@ -1,8 +1,6 @@
-import Head from 'next/head';
-import Link from 'next/link';
-import Header from '../../components/Header';
-import Layout from '../../components/Layout';
 import { NextPage } from 'next';
+import API from '../../api';
+import { withAuthSync } from '../../api/auth';
 
 interface Props {
   article: {
@@ -13,7 +11,6 @@ interface Props {
 
 const ArticlePage: NextPage<Props> = ( props: Props ) => (
   <>
-
     <h1 className='title'>
       Article: { props.article.title }
     </h1>
@@ -23,14 +20,22 @@ const ArticlePage: NextPage<Props> = ( props: Props ) => (
   </>
 );
 
-ArticlePage.getInitialProps = async function( context ) {
-  const { id } = context.query;
-  const res = await fetch( `http://localhost:8000/api/articles/${ id }` );
-  const article = await res.json();
-
-  console.log( `Fetched show: ${ article.title }` );
+ArticlePage.getInitialProps = async( ctx ) => {
+  const { id } = ctx.query;
+  let article = {
+    title: '',
+    body: ''
+  };
+  try {
+    article = await API.get( `/articles/${ id }` );
+    console.log( `Fetched show: ${ article.title }` );
+  } catch( e ) {
+    console.log( 'Error', e.message );
+  }
 
   return { article };
+
+
 };
 
-export default ArticlePage;
+export default withAuthSync( ArticlePage );
