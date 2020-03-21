@@ -1,5 +1,5 @@
-import { NextPage } from 'next';
 import React from 'react';
+import { NextPage } from 'next';
 import { withAuthSync } from '../api/auth';
 
 const PrivatePage: NextPage = () => {

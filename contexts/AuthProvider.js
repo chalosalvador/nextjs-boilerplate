@@ -2,8 +2,8 @@
  * Created by chalosalvador on 2/5/20
  */
 import React from 'react';
-import Auth from '../api/auth';
 import cookie from 'js-cookie';
+import Auth from '../api/auth';
 import authReducer from '../reducers/auth';
 import { LOGIN_ACTION, LOGOUT_ACTION } from '../constants/actions';
 

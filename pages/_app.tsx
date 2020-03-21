@@ -1,9 +1,19 @@
 import { AppProps } from 'next/app';
 import AuthProvider from '../contexts/AuthProvider';
+import MainLayout from '../components/Layout';
 
 // todo needed to fix an issue with antd and router, with =out this the router won't work
-import 'antd/lib/button/style/index.css';
-import MainLayout from '../components/Layout';
+// import 'antd/lib/button/style/index.css';
+import Router from 'next/router'
+import NProgress from 'nprogress';
+
+Router.events.on( 'routeChangeStart', url => {
+  console.log( `Loading: ${ url }` );
+  NProgress.start();
+} );
+Router.events.on( 'routeChangeComplete', () => NProgress.done() );
+Router.events.on( 'routeChangeError', () => NProgress.done() );
+
 
 const MyApp = ( { Component, pageProps }: AppProps ) => {
   return <div>

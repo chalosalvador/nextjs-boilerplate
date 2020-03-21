@@ -1,11 +1,11 @@
 import React from 'react';
-import { useAuth } from '../contexts/AuthProvider';
 import { useRouter } from 'next/router';
-import Routes from '../constants/routes';
-import { Button, Checkbox, Col, Form, Input, message, Row } from 'antd';
-import { LockOutlined, UserOutlined } from '@ant-design/icons/lib';
 import Link from 'next/link';
+import Routes from '../constants/routes';
 import API from '../api';
+import { useAuth } from '../contexts/AuthProvider';
+import { Button, Col, Form, Input, message, Row } from 'antd';
+import { LockOutlined, UserOutlined } from '@ant-design/icons/lib';
 
 const Register = () => {
   const auth = useAuth();
