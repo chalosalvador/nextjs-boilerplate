@@ -1,6 +1,9 @@
 /**
  * Created by chalosalvador on 3/1/20
  */
+import dynamic from 'next/dynamic';
+const LoginPage = dynamic( () => import('../pages/ingreso') );
+
 import API from './index';
 import { useEffect } from 'react';
 import Router from 'next/router';
@@ -8,6 +11,8 @@ import nextCookie from 'next-cookies';
 import cookie from 'js-cookie';
 import Routes from '../constants/routes';
 import { translateMessage } from '../helpers/translateMessage';
+import { message } from 'antd';
+
 
 /**
  * checkAuthentication
@@ -15,10 +20,13 @@ import { translateMessage } from '../helpers/translateMessage';
  * @returns {string}
  */
 const checkAuthentication = ( ctx ) => {
+  console.log( 'ctx', ctx );
   const { token } = nextCookie( ctx );
 
   // If there's no token, it means the user is not logged in.
   if( !token ) {
+    delete API.headers[ 'Authorization' ]; // stop sending authorization header
+
     if( typeof window === 'undefined' ) { // on the server
       ctx.res.writeHead( 302, { Location: Routes.LOGIN } );
       ctx.res.end();
@@ -26,6 +34,7 @@ const checkAuthentication = ( ctx ) => {
       Router.push( Routes.LOGIN );
     }
   }
+  API.headers[ 'Authorization' ] = 'Bearer ' + token; // start sending authorization header
 
   return token;
 };
@@ -65,8 +74,10 @@ const logout = () => {
   Router.push( Routes.LOGIN );
 };
 
+
 export const withAuthSync = WrappedComponent => {
   const Wrapper = props => {
+    const loggedIn = !!props.token;
     const syncLogout = event => {
       if( event.key === 'logout' ) {
         console.log( 'logged out from storage!' );
@@ -83,14 +94,17 @@ export const withAuthSync = WrappedComponent => {
       };
     }, [] );
 
+    console.log( 'Wrapper', props );
+
     return <WrappedComponent { ...props } />;
   };
 
   Wrapper.getInitialProps = async ctx => {
     const token = checkAuthentication( ctx );
-
+    console.log( 'Wrapper.getInitialProps token ', token );
+    // only call getInitialProps of WrappedComponent if there is a token
     const componentProps =
-      WrappedComponent.getInitialProps &&
+      token && WrappedComponent.getInitialProps &&
       (await WrappedComponent.getInitialProps( ctx ));
 
     return {

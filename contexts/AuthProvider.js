@@ -6,7 +6,6 @@ import Auth from '../api/auth';
 import cookie from 'js-cookie';
 import authReducer from '../reducers/auth';
 import { LOGIN_ACTION, LOGOUT_ACTION } from '../constants/actions';
-import API from '../api';
 
 const AuthStateContext = React.createContext();
 const AuthDispatchContext = React.createContext();
@@ -19,17 +18,11 @@ const AuthProvider = props => {
    */
   const dispatchAuthAction = ( token ) => {
     if( token ) {
-      API.headers[ 'Authorization' ] = 'Bearer ' + token; // TODO is it the best place to set this?
-      document.title = 'logged in';
-
       dispatch( {
         type: LOGIN_ACTION,
         payload: token
       } );
     } else {
-      delete API.headers[ 'Authorization' ]; // TODO is it the best place to set this?
-      document.title = 'logged out';
-
       dispatch( {
         type: LOGOUT_ACTION,
         payload: null

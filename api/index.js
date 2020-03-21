@@ -3,8 +3,6 @@
  */
 
 import fetch from 'isomorphic-unfetch';
-import Router from 'next/router';
-import Routes from '../constants/routes';
 
 const baseURL = 'http://localhost:8000/api'; // todo move to .env
 const headers = {
@@ -28,13 +26,9 @@ const handleRequest = async( endpoint, method, params = null ) => {
   // console.log('response', response);
   const jsonResponse = await response.json();
   // console.log('jsonResponse', jsonResponse);
+  console.log( 'response', response );
 
   if( !response.ok ) {
-    // throw new Error(jsonResponse.error);
-    console.log( 'response', response );
-    if( response.status === 401 ) {
-      Router.push( Routes.LOGIN );
-    }
     const error = new Error( jsonResponse.error );
     error.response = response;
     return Promise.reject( error );
