@@ -7,6 +7,9 @@ import MainLayout from '../components/Layout';
 import Router from 'next/router'
 import NProgress from 'nprogress';
 
+/**
+ * Show the loading bar on page transition
+ */
 Router.events.on( 'routeChangeStart', url => {
   console.log( `Loading: ${ url }` );
   NProgress.start();
@@ -16,6 +19,7 @@ Router.events.on( 'routeChangeError', () => NProgress.done() );
 
 
 const MyApp = ( { Component, pageProps }: AppProps ) => {
+
   return <div>
     <AuthProvider>
       <MainLayout>

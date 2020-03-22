@@ -2,6 +2,7 @@
  * Created by chalosalvador on 3/1/20
  */
 import dynamic from 'next/dynamic';
+
 const LoginPage = dynamic( () => import('../pages/ingreso') );
 
 import API from './index';
@@ -54,7 +55,8 @@ const login = async( email, password ) => {
 
     console.log( 'respponse', response );
     const token = response.token;
-    // localStorage.setItem( 'auth', JSON.stringify( response ) );
+    localStorage.setItem( 'login', true );
+    // localStorage.removeItem( 'logout' );
     cookie.set( 'token', token, { expires: 1 } );
     Router.push( Routes.HOME ); // todo where should this redirect?
 
@@ -70,32 +72,14 @@ const login = async( email, password ) => {
 const logout = () => {
   cookie.remove( 'token' );
   // to support logging out from all windows
-  window.localStorage.setItem( 'logout', Date.now() );
+  window.localStorage.setItem( 'login', false );
   Router.push( Routes.LOGIN );
 };
 
 
 export const withAuthSync = WrappedComponent => {
   const Wrapper = props => {
-    const loggedIn = !!props.token;
-    const syncLogout = event => {
-      if( event.key === 'logout' ) {
-        console.log( 'logged out from storage!' );
-        Router.push( Routes.LOGIN );
-      }
-    };
-
-    useEffect( () => {
-      window.addEventListener( 'storage', syncLogout );
-
-      return () => {
-        window.removeEventListener( 'storage', syncLogout );
-        window.localStorage.removeItem( 'logout' );
-      };
-    }, [] );
-
     console.log( 'Wrapper', props );
-
     return <WrappedComponent { ...props } />;
   };
 
