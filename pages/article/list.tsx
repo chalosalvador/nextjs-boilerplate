@@ -5,6 +5,7 @@ import { translateMessage } from '../../helpers/translateMessage';
 import ArticleList from '../../components/ArticleList';
 import ArticleForm from '../../components/ArticleForm';
 import { Button, message } from 'antd';
+import { useAuth } from '../../contexts/AuthProvider';
 
 interface Props {
   articles: []
@@ -30,6 +31,7 @@ const fetchArticles = async() => {
 const ArticleListPage: NextPage<Props> = ( props: Props ) => {
   const [ visible, setVisible ] = useState( false );
   const [ articles, setArticles ] = useState( props.articles );
+  const auth = useAuth();
 
   /**
    * onCreate article
@@ -50,12 +52,13 @@ const ArticleListPage: NextPage<Props> = ( props: Props ) => {
         error
       );
 
-      message.error( translateMessage(error.message) );
+      message.error( translateMessage( error.message ) );
     }
   };
 
   return (
     <div>
+      { auth.token &&
       <Button
         type='primary'
         onClick={ () => {
@@ -64,6 +67,7 @@ const ArticleListPage: NextPage<Props> = ( props: Props ) => {
       >
         Nuevo artículo
       </Button>
+      }
       <ArticleForm
         visible={ visible }
         onSubmit={ onCreate }
