@@ -1,18 +1,12 @@
 /**
  * Created by chalosalvador on 3/1/20
  */
-import dynamic from 'next/dynamic';
-
-const LoginPage = dynamic( () => import('../pages/ingreso') );
-
 import API from './index';
-import { useEffect } from 'react';
 import Router from 'next/router';
 import nextCookie from 'next-cookies';
 import cookie from 'js-cookie';
 import Routes from '../constants/routes';
 import { translateMessage } from '../helpers/translateMessage';
-import { message } from 'antd';
 
 
 /**
@@ -21,7 +15,7 @@ import { message } from 'antd';
  * @returns {string}
  */
 const checkAuthentication = ( ctx ) => {
-  console.log( 'ctx', ctx );
+  // console.log( 'ctx', ctx );
   const { token } = nextCookie( ctx );
 
   // If there's no token, it means the user is not logged in.

@@ -3,6 +3,7 @@
  */
 
 import fetch from 'isomorphic-unfetch';
+import cookie from 'js-cookie';
 
 const baseURL = 'http://localhost:8000/api'; // todo move to .env
 const headers = {
@@ -17,6 +18,13 @@ const handleRequest = async( endpoint, method, params = null ) => {
     headers
   };
 
+  if( !headers[ 'Authorization' ] ) {
+    let token = cookie.get( 'token' );
+    if( token ) {
+      headers[ 'Authorization' ] = 'Bearer ' + token; // start sending authorization header
+    }
+  }
+
   if( params !== null ) {
     requestData[ 'body' ] = JSON.stringify( params );
   }
@@ -25,12 +33,11 @@ const handleRequest = async( endpoint, method, params = null ) => {
 
   // console.log('response', response);
   const jsonResponse = await response.json();
-  // console.log('jsonResponse', jsonResponse);
-  console.log( 'response', response );
+  console.log('jsonResponse', jsonResponse);
 
   if( !response.ok ) {
     const error = new Error( jsonResponse.error );
-    error.response = response;
+    error.response = jsonResponse;
     return Promise.reject( error );
   }
 
