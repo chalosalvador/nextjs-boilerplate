@@ -6,6 +6,8 @@ import API from '../api';
 import { useAuth } from '../contexts/AuthProvider';
 import { Button, Col, Form, Input, message, Row } from 'antd';
 import { LockOutlined, UserOutlined } from '@ant-design/icons/lib';
+import ErrorList from '../components/ErrorList';
+import { translateMessage } from '../helpers/translateMessage';
 
 const Register = () => {
   const auth = useAuth();
@@ -38,9 +40,12 @@ const Register = () => {
         'You have an error in your code or there are Network issues.',
         error
       );
+      const errorList = error.response.error_list && <ErrorList errors={ error.response.error_list } />;
 
-      // todo show message
-      message.error(error.message)
+      message.error( <>
+        { translateMessage( error.message ) }
+        { errorList }
+      </> );
     }
   };
 
@@ -101,25 +106,26 @@ const Register = () => {
             </Form.Item>
 
             <Form.Item
-              name="password_confirmation"
-              dependencies={['password']}
+              name='password_confirmation'
+              dependencies={ [ 'password' ] }
               hasFeedback
-              rules={[
+              rules={ [
                 {
                   required: true,
                   message: 'Confirma tu clave',
                 },
-                ({ getFieldValue }) => ({
-                  validator(rule, value) {
-                    if (!value || getFieldValue('password') === value) {
+                ( { getFieldValue } ) => ({
+                  validator( rule, value ) {
+                    if( !value || getFieldValue( 'password' ) === value ) {
                       return Promise.resolve();
                     }
-                    return Promise.reject('Las claves no coinciden');
+                    return Promise.reject( 'Las claves no coinciden' );
                   },
                 }),
-              ]}
+              ] }
             >
-              <Input.Password prefix={ <LockOutlined className='site-form-item-icon' /> } placeholder="Confirma tu clave" />
+              <Input.Password prefix={ <LockOutlined className='site-form-item-icon' /> }
+                              placeholder='Confirma tu clave' />
             </Form.Item>
 
             <Form.Item>

@@ -34,18 +34,15 @@ const ArticleListPage: NextPage<Props> = ( props: Props ) => {
   const auth = useAuth();
 
   /**
-   * onCreate article
-   * Called when the user clicks on button to create article
-   * @param values
+   * Executed after the form is submitted
+   * Fetches all the articles and refreshes the list
+   * Closes the modal
    */
-  const onCreate = async values => {
-    console.log( 'Received values of form: ', values );
-
+  const afterCreate = async() => {
     try {
-      await API.post( '/articles', values ); // post data to server
       const refreshedProps = await fetchArticles(); // refresh list of articles
       setArticles( refreshedProps.articles ); // set articles list state
-      setVisible( false ); // close modal
+      setVisible( false ); // close the modal
     } catch( error ) {
       console.error(
         'You have an error in your code or there are Network issues.',
@@ -70,7 +67,8 @@ const ArticleListPage: NextPage<Props> = ( props: Props ) => {
       }
       <ArticleForm
         visible={ visible }
-        onSubmit={ onCreate }
+        update={ false }
+        onSubmit={ afterCreate }
         onCancel={ () => {
           setVisible( false );
         } }

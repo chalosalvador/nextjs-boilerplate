@@ -14,6 +14,7 @@ const ArticleList = ( props ) => (
                 <a>Más</a>
               </Link> }>
               <p>{ article.body }</p>
+              <p>Escrito por: { article.user.name }</p>
             </Card>
           </Col>
         ) )

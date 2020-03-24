@@ -1,5 +1,8 @@
-import React from 'react';
-import { Modal, Form, Input } from 'antd';
+import React, { useState } from 'react';
+import { Modal, Form, Input, message, List } from 'antd';
+import { translateMessage } from '../helpers/translateMessage';
+import API from '../api';
+import ErrorList from './ErrorList';
 
 interface Values {
   title: string;
@@ -9,16 +12,76 @@ interface Values {
 
 interface ArticleFormProps {
   visible: boolean;
-  onSubmit: ( values: Values ) => void;
+  update: boolean;
+  onSubmit: () => void;
   onCancel: () => void;
 }
 
 const ArticleForm: React.FC<ArticleFormProps> = ( {
   visible,
+  update,
   onSubmit,
   onCancel,
 } ) => {
   const [ form ] = Form.useForm();
+  /**
+   * onCreate article
+   * Called when the user clicks on button to create article
+   * @param values
+   */
+  const onCreate = async values => {
+    console.log( 'Received values of form: ', values );
+
+    form.validateFields()
+      .then( async( values: Values ) => {
+        try {
+          await API.post( '/articles', values ); // post data to server
+          form.resetFields();
+          onSubmit();
+        } catch( error ) {
+          console.error(
+            'You have an error in your code or there are Network issues.',
+            error
+          );
+
+          const errorList = error.response.error_list && <ErrorList errors={ error.response.error_list } />;
+
+          message.error( <>
+            { translateMessage( error.message ) }
+            { errorList }
+          </> );
+        }
+      } )
+      .catch( info => {
+        console.log( 'Validate Failed:', info );
+      } );
+
+  };
+
+  const onUpdate = async values => {
+    console.log( 'Received values of form: ', values );
+
+    form.validateFields()
+      .then( async( values: Values ) => {
+        try {
+          await API.put( '/articles', values ); // post data to server
+          form.resetFields();
+          onSubmit();
+        } catch( error ) {
+          console.error(
+            'You have an error in your code or there are Network issues.',
+            error
+          );
+
+          message.error( translateMessage( error.message ) );
+        }
+      } )
+      .catch( info => {
+        console.log( 'Validate Failed:', info );
+      } );
+
+  };
+
   return (
     <Modal
       visible={ visible }
@@ -26,17 +89,9 @@ const ArticleForm: React.FC<ArticleFormProps> = ( {
       okText='Crear'
       cancelText='Cancelar'
       onCancel={ onCancel }
-      onOk={ () => {
-        form
-          .validateFields()
-          .then( ( values: Values ) => {
-            form.resetFields();
-            onSubmit( values );
-          } )
-          .catch( info => {
-            console.log( 'Validate Failed:', info );
-          } );
-      } }
+      onOk={ !update
+        ? onCreate
+        : onUpdate }
     >
       <Form
         form={ form }
