@@ -1,12 +1,15 @@
 import { NextPage } from 'next';
 import API from '../../api';
 import { withAuthSync } from '../../api/auth';
+import CommentsList from '../../components/CommentsList';
 
 interface Props {
+  id: number,
   article: {
     title: string,
-    body: string
-  }
+    body: string,
+  },
+  comments: any[]
 }
 
 const ArticlePage: NextPage<Props> = ( props: Props ) => (
@@ -17,6 +20,8 @@ const ArticlePage: NextPage<Props> = ( props: Props ) => (
 
     <p>{ props.article.body }</p>
 
+    <CommentsList articleId={props.id} comments={props.comments} />
+
   </>
 );
 
@@ -26,14 +31,22 @@ ArticlePage.getInitialProps = async( ctx ) => {
     title: '',
     body: ''
   };
+
+  let commentsList = [];
   try {
     article = await API.get( `/articles/${ id }` );
-    console.log( `Fetched show: ${ article.title }` );
+    commentsList = await API.get( `/articles/${ id }/comments` );
+    // console.log( `Fetched show: ${ article.title }` );
+    console.log( `Fetched show: ${ commentsList }` );
   } catch( e ) {
     console.log( 'Error', e.message );
   }
 
-  return { article };
+  return {
+    id: parseInt(id.toString()),
+    article,
+    comments: commentsList
+  };
 
 
 };
