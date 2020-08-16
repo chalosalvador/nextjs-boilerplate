@@ -1,15 +1,13 @@
-import { NextPage } from 'next';
-import API from '../api';
+import { InferGetStaticPropsType, NextPage } from 'next';
+import API from '../api/index';
 import ArticleList from '../components/ArticleList';
+import { Article } from '../interfaces';
 
-interface Props {
-  articles: []
-}
-
-const HomePage: NextPage<Props> = ( props: Props ) => (
+const HomePage = ( props: InferGetStaticPropsType<typeof getStaticProps> ) => (
   <>
     <h1 className='page-title'>
-      <a href='https://nextjs.org'>Next.js!</a> boilerplate with <a href='https://ant.design/docs/react/introduce'>Antd</a>
+      <a href='https://nextjs.org'>Next.js!</a> boilerplate
+      with <a href='https://ant.design/docs/react/introduce'>Antd</a>
     </h1>
 
     <p>
@@ -25,18 +23,21 @@ const HomePage: NextPage<Props> = ( props: Props ) => (
   </>
 );
 
-HomePage.getInitialProps = async function() {
+export const getStaticProps = async() => {
+  let articles: Article[] = [];
   try {
-    const articles = await API.get( '/articles' );
+    articles = (await API.get( '/articles' )).data;
     console.log( `Show data fetched. Count: ${ articles.length }` );
 
     return {
-      articles
+      props: {
+        articles
+      }
     };
   } catch( e ) {
     console.log( 'error getting articles', e );
     return {
-      articles: []
+      articles
     };
   }
 };

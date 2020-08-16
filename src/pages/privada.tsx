@@ -1,6 +1,6 @@
 import React from 'react';
 import { NextPage } from 'next';
-import { withAuthSync } from '../api/auth';
+import withAuth from '../hocs/withAuth';
 
 const PrivatePage: NextPage = () => {
   return <>
@@ -10,4 +10,4 @@ const PrivatePage: NextPage = () => {
   </>;
 };
 
-export default withAuthSync( PrivatePage );
+export default withAuth( PrivatePage );

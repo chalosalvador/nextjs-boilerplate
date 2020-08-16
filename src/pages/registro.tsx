@@ -2,27 +2,28 @@ import React from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import Routes from '../constants/routes';
-import API from '../api';
-import { useAuth } from '../contexts/AuthProvider';
+import API from '../api/index';
+import { useAuth } from '../providers/Auth';
 import { Button, Col, Form, Input, message, Row } from 'antd';
 import { LockOutlined, UserOutlined } from '@ant-design/icons/lib';
 import ErrorList from '../components/ErrorList';
 import { translateMessage } from '../helpers/translateMessage';
+import withoutAuth from '../hocs/withoutAuth';
 
 const Register = () => {
-  const auth = useAuth();
-  const router = useRouter();
+  // const auth = useAuth();
+  // const router = useRouter();
 
-  React.useEffect( () => {
-    const checkAuthentication = () => {
-      console.log( 'auth.token', auth );
-      if( auth.token ) {
-        router.push( Routes.HOME );
-      }
-    };
-
-    checkAuthentication();
-  }, [ auth ] );
+  // React.useEffect( () => {
+  //   const checkAuthentication = () => {
+  //     console.log( 'auth.token', auth );
+  //     if( auth.token ) {
+  //       router.push( Routes.HOME );
+  //     }
+  //   };
+  //
+  //   checkAuthentication();
+  // }, [ auth ] );
 
   const onFinish = async( userData: any ) => {
     console.log( 'Received values of form: ', userData );
@@ -150,4 +151,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default withoutAuth( Register );

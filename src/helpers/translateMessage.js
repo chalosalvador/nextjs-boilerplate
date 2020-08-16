@@ -5,6 +5,7 @@
 export const translateMessage = ( type, params = {} ) => {
 
   const messageList = {
+    'The given data was invalid.': 'Datos no válidos',
     'PERMISSION_DENIED': 'No tienes permiso para realizar esta acción',
     'auth/internal-error': 'hmmm... Algo salió mal y no lo teníamos previsto, por favor vuelve a intentarlo.',
     'auth/argument-error': 'La URL de activación no es válida.',

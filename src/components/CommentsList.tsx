@@ -1,8 +1,8 @@
 import { Comment, List, Tooltip, Form, Input, Button, Avatar, message } from 'antd';
 import moment from 'moment';
 import { NextPage } from 'next';
-import { useState } from 'react';
-import API from '../api';
+import React, { useState } from 'react';
+import API from '../api/index';
 import { translateMessage } from '../helpers/translateMessage';
 import ErrorList from './ErrorList';
 
@@ -79,24 +79,30 @@ const CommentsList: NextPage<Props> = ( props: Props ) => {
     }
   };
 
-  const handleChange = e => {
-    setValue( e.target.value );
-  };
 
+  const Editor = ( { onSubmit, submitting, value } ) => {
+    const [ form ] = Form.useForm();
 
-  const Editor = ( { onChange, onSubmit, submitting, value } ) => (
-    <div>
-      {/* TODO use antd forms */}
-      <Form.Item>
-        <TextArea rows={ 4 } onChange={ onChange } value={ value } />
+    return (<Form
+      form={ form }
+      name='form_comment'
+    >
+      <Form.Item name='text'
+                 rules={ [
+                   {
+                     required: true,
+                     message: 'Ingresa el texto de tu comentario'
+                   }
+                 ] }>
+        <TextArea rows={ 4 } />
       </Form.Item>
       <Form.Item>
         <Button htmlType='submit' loading={ submitting } onClick={ onSubmit } type='primary'>
           Add Comment
         </Button>
       </Form.Item>
-    </div>
-  );
+    </Form>);
+  };
 
   return <>
     <Comment
@@ -108,7 +114,6 @@ const CommentsList: NextPage<Props> = ( props: Props ) => {
       }
       content={
         <Editor
-          onChange={ handleChange }
           onSubmit={ handleSubmit }
           submitting={ submitting }
           value={ value }

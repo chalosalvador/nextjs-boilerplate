@@ -6,7 +6,8 @@ import Routes from '../constants/routes';
 import Navigation from './Navigation';
 import { Layout, Row, Col, Button, Popover } from 'antd';
 import { FacebookOutlined, InstagramOutlined } from '@ant-design/icons';
-import logo from '../public/images/logo-menta.png';
+import logo from '../../public/images/logo-menta.png';
+import React from 'react';
 
 const Header = Layout.Header;
 const Content = Layout.Content;
@@ -19,8 +20,8 @@ const MainLayout = props => {
       <Layout>
         <Head>
           <title>Create Next App</title>
-          {/* Import CSS for nprogress */}
-          <link rel="stylesheet" type="text/css" href="/css/nprogress.css" />
+          {/* Import CSS for nprogress */ }
+          <link rel='stylesheet' type='text/css' href='/css/nprogress.css' />
           <link rel='icon' href='/favicon.ico' />
         </Head>
 
@@ -39,7 +40,10 @@ const MainLayout = props => {
                 </Col>
 
                 <Col xs={ 2 } align='right' className='responsive-menu-button'>
-                  <Popover content={ <Navigation mode='vertical' /> } trigger='click' placement='rightTop' overlayClassName='responsive-menu-wrapper'>
+                  <Popover content={ <Navigation mode='vertical' /> }
+                           trigger='click'
+                           placement='rightTop'
+                           overlayClassName='responsive-menu-wrapper'>
                     <Button type='primary'>
                       <svg viewBox='64 64 896 896'
                            focusable='false'
@@ -77,7 +81,7 @@ const MainLayout = props => {
 
 
         <Content className='content'>
-          <Row type='flex' justify='center'>
+          <Row type='flex' justify='center' style={ { flex: 'auto' } }>
             <Col xs={ 22 } md={ 20 }>
               { props.children }
             </Col>
