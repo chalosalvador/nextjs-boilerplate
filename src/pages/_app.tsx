@@ -1,11 +1,11 @@
 import { AppProps } from 'next/app';
-import AuthProvider from '../contexts/AuthProvider';
+import { AuthProvider } from '../providers/Auth';
 import MainLayout from '../components/Layout';
 
-// todo needed to fix an issue with antd and router, with =out this the router won't work
-// import 'antd/lib/button/style/index.css';
-import Router from 'next/router'
+import 'antd/dist/antd.css';
+import Router from 'next/router';
 import NProgress from 'nprogress';
+import React from 'react';
 
 /**
  * Show the loading bar on page transition
@@ -147,6 +147,7 @@ const MyApp = ( { Component, pageProps }: AppProps ) => {
           padding: 50px 0;
           background: transparent;
           min-height: 300px;
+          display: flex;
         }
         
         .ant-table-thead > tr > th,

@@ -1,26 +1,21 @@
 import React, { useState } from 'react';
-import { NextPage } from 'next';
-import API from '../../api';
+import { InferGetStaticPropsType, NextPage } from 'next';
+import API from '../../api/index';
 import { translateMessage } from '../../helpers/translateMessage';
 import ArticleList from '../../components/ArticleList';
 import ArticleForm from '../../components/ArticleForm';
 import { Button, message } from 'antd';
-import { useAuth } from '../../contexts/AuthProvider';
-
-interface Props {
-  articles: []
-}
+import { useAuth } from '../../providers/Auth';
+import { Article, Category } from '../../interfaces';
 
 /**
  * Fetch Articles from DB
  */
-const fetchArticles = async() => {
+export const fetchArticles = async() => {
   const articles = await API.get( '/articles' );
-  console.log( `Show data fetched. Count: ${ articles.length }` );
+  console.log( `Show data fetched. Articles: ${ articles.data.length }` );
 
-  return {
-    articles
-  };
+  return articles.data;
 };
 
 /**
@@ -28,7 +23,8 @@ const fetchArticles = async() => {
  * @param props
  * @constructor
  */
-const ArticleListPage: NextPage<Props> = ( props: Props ) => {
+const ArticleListPage = ( props: InferGetStaticPropsType<typeof getStaticProps> ) => {
+
   const [ visible, setVisible ] = useState( false );
   const [ articles, setArticles ] = useState( props.articles );
   const auth = useAuth();
@@ -40,8 +36,8 @@ const ArticleListPage: NextPage<Props> = ( props: Props ) => {
    */
   const afterCreate = async() => {
     try {
-      const refreshedProps = await fetchArticles(); // refresh list of articles
-      setArticles( refreshedProps.articles ); // set articles list state
+      const refreshedArticles = await fetchArticles(); // refresh list of articles
+      setArticles( refreshedArticles ); // set articles list state
       setVisible( false ); // close the modal
     } catch( error ) {
       console.error(
@@ -55,17 +51,20 @@ const ArticleListPage: NextPage<Props> = ( props: Props ) => {
 
   return (
     <div>
-      { auth.token &&
-      <Button
-        type='primary'
-        onClick={ () => {
-          setVisible( true );
-        } }
-      >
-        Nuevo artículo
-      </Button>
+      {
+        auth.isAuthenticated &&
+        <Button
+          type='primary'
+          onClick={ () => {
+            setVisible( true );
+          } }
+        >
+          Nuevo artículo
+        </Button>
       }
+
       <ArticleForm
+        categories={ props.categories }
         visible={ visible }
         update={ false }
         onSubmit={ afterCreate }
@@ -74,11 +73,24 @@ const ArticleListPage: NextPage<Props> = ( props: Props ) => {
         } }
       />
 
-      <ArticleList articles={ articles } />
+      <ArticleList articles={ articles } categories={ props.categories } />
     </div>
   );
 };
 
-ArticleListPage.getInitialProps = fetchArticles;
+export const getStaticProps = async() => {
+  const articles: Article[] = await fetchArticles();
+  const categories: Category[] = (await API.get( '/categories' )).data;
+  console.log( `Show data fetched. Categories: ${ categories }` );
+
+  return {
+    props: {
+      articles,
+      categories
+    },
+    revalidate: 1, // In seconds
+  };
+};
+
 
 export default ArticleListPage;
